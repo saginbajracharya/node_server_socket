@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rest Socket</title>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <h1>
+      Device Status:
+      <span id="data"></span>
+    </h1>
+    <h2>Device History:</h2>
+    <ul id="history"></ul>
+    <script>
+      const socket = io();
+      console.log(socket);
+
+      // Create an array to store message history
+      const messageHistory = [];
+
+      socket.on("mod_forecast", (data) => {
+        const formattedData = JSON.stringify(data, null, 2);
+        document.querySelector("#data").textContent = formattedData;
+
+        // Add the received message to the message history
+        messageHistory.push(formattedData);
+
+        // Display message history in a list
+        const historyList = document.querySelector("#history");
+        historyList.innerHTML = ""; // Clear existing content
+
+        messageHistory.forEach((message, index) => {
+          const listItem = document.createElement("li");
+          listItem.textContent = message;
+          historyList.appendChild(listItem);
+        });
+      });
+    </script>
+  </body>
+</html>
